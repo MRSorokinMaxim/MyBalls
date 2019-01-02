@@ -13,7 +13,7 @@
 
 @interface BoxBallView : UIView <NSCopying>
 
-@property (strong, nonatomic) UIImageView *ball;
+@property (strong, nonatomic) UIImageView *mainBall;
 @property (strong, nonatomic) UIImageView *backgroundBall;
 @property (nonatomic) NSUInteger position;
 @property (nonatomic) CGPoint returnCentre;

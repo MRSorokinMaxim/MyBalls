@@ -28,13 +28,10 @@ static NSUInteger const kCornerRadius = 12;
 }
 
 - (void)drawRect:(CGRect)rect {
-    
-    UIBezierPath *roundRect = [UIBezierPath bezierPathWithRoundedRect:self.bounds
-                                                         cornerRadius:[self cornerRadius]];
+    UIBezierPath *roundRect = [UIBezierPath bezierPathWithRoundedRect:self.bounds cornerRadius:[self cornerRadius]];
     [roundRect addClip];
     [UIColor.lightGrayColor setStroke];
     [roundRect stroke];
-    
 }
 
 
@@ -56,7 +53,7 @@ static NSUInteger const kCornerRadius = 12;
     self = [super initWithFrame:frame];
     if(self){
         [self setup];
-        _ball = nil;
+        _mainBall = nil;
         _backgroundBall = nil;
         _position = -1;
         _returnCentre = self.center;
@@ -75,8 +72,8 @@ static NSUInteger const kCornerRadius = 12;
         ball.position = _position;
         ball.returnCentre = _returnCentre;
         ball.pathImage = [_pathImage copy];
-        ball.ball = [self createImageViewWithFrame:_ball.frame andImage:ball.pathImage];
-        ball.backgroundBall = [self createImageViewWithFrame:_ball.frame andImage:ball.pathImage];
+        ball.mainBall = [self createImageViewWithFrame:_mainBall.frame andImage:ball.pathImage];
+        ball.backgroundBall = [self createImageViewWithFrame:_mainBall.frame andImage:ball.pathImage];
     }
     return ball;
 }
@@ -92,14 +89,14 @@ static NSUInteger const kCornerRadius = 12;
 }
 
 - (void)animatingRecoveryStandardBallSizeWithCompletionBlock:(void(^)(BOOL finished))complection {
-    CGRect standardBound = CGRectMake(CGRectGetMinX(self.ball.bounds),
-                                      CGRectGetMinY(self.ball.bounds),
+    CGRect standardBound = CGRectMake(CGRectGetMinX(self.mainBall.bounds),
+                                      CGRectGetMinY(self.mainBall.bounds),
                                       kWidthRectBall,
                                       kHeightRectBall);
-    [self.ball.layer removeAllAnimations];
+    [self.mainBall.layer removeAllAnimations];
     __weak BoxBallView *weakSelf = self;
     [UIView animateWithDuration:0.2 delay:0.0 options:UIViewAnimationOptionCurveEaseInOut | UIViewKeyframeAnimationOptionBeginFromCurrentState animations:^{
-        weakSelf.ball.bounds = standardBound;
+        weakSelf.mainBall.bounds = standardBound;
         weakSelf.backgroundBall.bounds = standardBound;
     } completion:^(BOOL finished) {
         complection ? complection(finished) : nil;
@@ -110,21 +107,21 @@ static NSUInteger const kCornerRadius = 12;
     UIImageView *ball = [self createImageViewWithFrame:self.bounds andImage:pathBallImage];
     UIImageView *backgroundBall = [self createImageViewWithFrame:self.bounds andImage:pathBallImage];
     self.pathImage = pathBallImage;
-    self.ball = ball;
+    self.mainBall = ball;
     self.backgroundBall = backgroundBall;
     [self addSubview:ball];
 }
 
 - (void)deleteBall {
     [self.backgroundBall removeFromSuperview];
-    [self.ball removeFromSuperview];
-    self.ball = nil;
+    [self.mainBall removeFromSuperview];
+    self.mainBall = nil;
     self.pathImage = nil;
 }
 
 + (BoxBallView *)createBoxFrom:(BoxBallView *)box {
     BoxBallView *newBox = [box copy];
-    newBox.ball.center = box.center;
+    newBox.mainBall.center = box.center;
     newBox.backgroundBall.alpha = 0.6;
     return newBox;
 }

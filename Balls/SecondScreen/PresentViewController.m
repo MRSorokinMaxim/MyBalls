@@ -46,7 +46,7 @@
 - (void)addBallFromBox:(BoxBallView *)box {
     self.currentBoxBall = [BoxBallView createBoxFrom:box];
     [box addSubview:self.currentBoxBall.backgroundBall];
-    [self.gameView addSubview:self.currentBoxBall.ball];
+    [self.gameView addSubview:self.currentBoxBall.mainBall];
 }
 
 - (void)replaceBallAtGameViewFromBox:(BoxBallView *)box {
@@ -66,7 +66,7 @@
 - (void)animationReturnBall {
     __weak PresentViewController *weakSelf = self;
     [UIView animateWithDuration:0.1 animations:^{
-        weakSelf.currentBoxBall.ball.center = weakSelf.currentBoxBall.returnCentre;
+        weakSelf.currentBoxBall.mainBall.center = weakSelf.currentBoxBall.returnCentre;
     } completion:^(BOOL finished) {
         for (UIView *sourceView in weakSelf.gameView.subviews) {
             if ([sourceView isKindOfClass:[BoxBallView class]]) {
@@ -90,7 +90,7 @@
         for (UIView *sourceView in self.gameView.subviews) {
             if ([sourceView isKindOfClass:[BoxBallView class]]) {
                 BoxBallView *ball = (BoxBallView *)sourceView;
-                if (CGRectContainsPoint(ball.frame, touchPoint) && ball.ball) {
+                if (CGRectContainsPoint(ball.frame, touchPoint) && ball.mainBall) {
                     NSLog(@"began");
                     self.anim = YES;
                     [self replaceBallAtGameViewFromBox:ball];
@@ -103,11 +103,11 @@
             if ([sourceView isKindOfClass:[BoxBallView class]]) {
                 BoxBallView *ball = (BoxBallView *)sourceView;
                 [self.currentBoxBall animatingRecoveryStandardBallSizeWithCompletionBlock:nil];
-                self.currentBoxBall.ball.center = touchPoint;
-                if (CGRectContainsPoint(ball.frame, touchPoint) && ball.ball) {
+                self.currentBoxBall.mainBall.center = touchPoint;
+                if (CGRectContainsPoint(ball.frame, touchPoint) && ball.mainBall) {
                     ball.backgroundColor = [UIColor redColor];
                 }
-                else if (CGRectContainsPoint(ball.frame, touchPoint) && !ball.ball) {
+                else if (CGRectContainsPoint(ball.frame, touchPoint) && !ball.mainBall) {
                     ball.backgroundColor = [UIColor yellowColor];
                 }
                 else {
@@ -121,13 +121,13 @@
             if ([sourceView isKindOfClass:[BoxBallView class]]) {
                 BoxBallView *ball = (BoxBallView *)sourceView;
                 ball.backgroundColor = [UIColor clearColor];
-                if (CGRectContainsPoint(ball.frame, self.currentBoxBall.ball.center) && !ball.ball) {
+                if (CGRectContainsPoint(ball.frame, self.currentBoxBall.mainBall.center) && !ball.mainBall) {
                     [self replaceBallAtBox:ball];
                     [self addNewBallsOnScreen];
                     self.anim = NO;
                     break;
                 }
-                else if (CGRectContainsPoint(ball.frame, self.currentBoxBall.ball.center) && ball.ball) {
+                else if (CGRectContainsPoint(ball.frame, self.currentBoxBall.mainBall.center) && ball.mainBall) {
                     [self animationReturnBall];
                     break;
                 }
@@ -191,55 +191,55 @@
 
 - (void)animatingCurrentSizeBall:(BoxBallView *)ball {
     
-    CGRect oldFrame = CGRectMake(CGRectGetMaxX(ball.ball.frame),
-                                 CGRectGetMaxY(ball.ball.frame),
+    CGRect oldFrame = CGRectMake(CGRectGetMaxX(ball.mainBall.frame),
+                                 CGRectGetMaxY(ball.mainBall.frame),
                                  kWidthRectBall,
                                  kHeightRectBall);
-    CGRect newFrame = CGRectMake(CGRectGetMaxX(ball.ball.frame),
-                                 CGRectGetMaxY(ball.ball.frame),
+    CGRect newFrame = CGRectMake(CGRectGetMaxX(ball.mainBall.frame),
+                                 CGRectGetMaxY(ball.mainBall.frame),
                                  kWidthRectBall / 1.5f,
                                  kHeightRectBall / 1.5f);
     
-    CGPoint centre = ball.ball.center;
+    CGPoint centre = ball.mainBall.center;
     
-    self.sizeAnimationBall = CGSizeMake(CGRectGetWidth(ball.ball.bounds) + 10.f,
-                                        CGRectGetHeight(ball.ball.bounds) + 10.f);
+    self.sizeAnimationBall = CGSizeMake(CGRectGetWidth(ball.mainBall.bounds) + 10.f,
+                                        CGRectGetHeight(ball.mainBall.bounds) + 10.f);
     
-    CGRect variableRect = CGRectMake(CGRectGetMaxX(ball.ball.frame),
-                                     CGRectGetMaxY(ball.ball.frame),
+    CGRect variableRect = CGRectMake(CGRectGetMaxX(ball.mainBall.frame),
+                                     CGRectGetMaxY(ball.mainBall.frame),
                                      MIN(self.sizeAnimationBall.width, kWidthRectBall + 50.f),
                                      MIN(self.sizeAnimationBall.height, kHeightRectBall + 50.f));
     
     
-    [ball.ball.layer removeAllAnimations];
+    [ball.mainBall.layer removeAllAnimations];
     [UIView animateWithDuration:0.3 delay:0.0 options:UIViewAnimationOptionCurveEaseInOut | UIViewKeyframeAnimationOptionBeginFromCurrentState animations:^{
-        ball.ball.alpha = 0.8;
-        ball.ball.frame = variableRect;
-        ball.ball.center = centre;
+        ball.mainBall.alpha = 0.8;
+        ball.mainBall.frame = variableRect;
+        ball.mainBall.center = centre;
         
     } completion:^(BOOL finished) {
         if(finished){
             [UIView animateWithDuration:0.5 delay:0.0 options:UIViewAnimationOptionCurveEaseInOut animations:^{
-                ball.ball.alpha = 1;
-                ball.ball.frame = newFrame;
-                ball.ball.center = centre;
+                ball.mainBall.alpha = 1;
+                ball.mainBall.frame = newFrame;
+                ball.mainBall.center = centre;
             } completion:^(BOOL finished) {
                 if(finished){
                     [UIView animateKeyframesWithDuration:1.0 delay:0.0 options: UIViewKeyframeAnimationOptionRepeat | UIViewKeyframeAnimationOptionBeginFromCurrentState  animations:^{
                         
                         [UIView addKeyframeWithRelativeStartTime:0.0 relativeDuration:0.5 animations:^{
-                            ball.ball.frame = oldFrame;
-                            ball.ball.center = centre;
+                            ball.mainBall.frame = oldFrame;
+                            ball.mainBall.center = centre;
                         }];
                         [UIView addKeyframeWithRelativeStartTime:0.5 relativeDuration:0.5 animations:^{
-                            ball.ball.frame = newFrame;
-                            ball.ball.center = centre;
+                            ball.mainBall.frame = newFrame;
+                            ball.mainBall.center = centre;
                         }];
                         
                     } completion:^(BOOL finished) {
                         [UIView animateWithDuration:0.2 delay:0.0 options:UIViewAnimationOptionCurveEaseInOut | UIViewKeyframeAnimationOptionBeginFromCurrentState animations:^{
-                            ball.ball.frame = oldFrame;
-                            ball.ball.center = centre;
+                            ball.mainBall.frame = oldFrame;
+                            ball.mainBall.center = centre;
                         } completion:^(BOOL finished) {
                         }];
                     }];
