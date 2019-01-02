@@ -74,7 +74,7 @@
                                       kWidthRectBall,
                                       kHeightRectBall);
             BoxBallView *boxView = [[BoxBallView alloc] initWithFrame:frame];
-            boxView.position = countBallOnWidth * [self countBallOnHeight] + countBallOnHeight;
+            boxView.tag = countBallOnWidth * [self countBallOnHeight] + countBallOnHeight;
             [self addSubview:boxView];
         }
     }

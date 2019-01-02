@@ -8,24 +8,14 @@
 
 #import <UIKit/UIKit.h>
 
+@class MultiColorBall;
 
-@class MulticoloredBall;
+@interface BoxBallView : UIView
 
-@interface BoxBallView : UIView <NSCopying>
-
-@property (strong, nonatomic) UIImageView *mainBall;
-@property (strong, nonatomic) UIImageView *backgroundBall;
-@property (nonatomic) NSUInteger position;
-@property (nonatomic) CGPoint returnCentre;
-@property (strong, nonatomic) NSString *pathImage;
-
-- (void)animatingRecoveryStandardBallSizeWithCompletionBlock:(void(^)(BOOL finished))complection;
+@property (strong, nonatomic) MultiColorBall *mainBall;
 
 - (void)createBallWithPathImage:(NSString *)pathBallImage;
 
 - (void)deleteBall;
-
-+ (BoxBallView *)createBoxFrom:(BoxBallView *)box;
-
 
 @end

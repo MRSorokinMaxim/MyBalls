@@ -8,11 +8,20 @@
 
 #import <UIKit/UIKit.h>
 
-@interface MultiColorBall : UIImageView
+@interface MultiColorBall : UIImageView <NSCopying>
 
 @property (nonatomic) CGPoint returnCentre;
 @property (strong, nonatomic) NSString *imagePath;
+@property (strong, nonatomic) MultiColorBall *backgroundBall;
 
-- (instancetype)initWithimagePath:(NSString *)imagePath returnCentre:(CGPoint)returnCentre;
+- (void)addBallImageWithPath:(NSString *)path;
+
++ (MultiColorBall *)createBallFrom:(MultiColorBall *)ball;
+
+- (void)deleteBall;
+
+- (void)animatingRecoveryStandardBallSizeWithCompletionBlock:(void(^)(BOOL finished))complection;
+
+- (void)animatingCurrentSizeBall;
 
 @end
