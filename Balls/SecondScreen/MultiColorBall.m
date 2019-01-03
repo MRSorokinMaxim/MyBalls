@@ -7,7 +7,6 @@
 //
 
 #import "MultiColorBall.h"
-#import "Header.h"
 
 @interface MultiColorBall ()
 
@@ -72,24 +71,22 @@
                                  CGRectGetMaxY(self.frame),
                                  kWidthRectBall / 1.5f,
                                  kHeightRectBall / 1.5f);
-    
+
     CGPoint centre = self.center;
-    
+
     self.sizeAnimationBall = CGSizeMake(CGRectGetWidth(self.bounds) + 10.f,
                                         CGRectGetHeight(self.bounds) + 10.f);
-    
+
     CGRect variableRect = CGRectMake(CGRectGetMaxX(self.frame),
                                      CGRectGetMaxY(self.frame),
                                      MIN(self.sizeAnimationBall.width, kWidthRectBall + 50.f),
                                      MIN(self.sizeAnimationBall.height, kHeightRectBall + 50.f));
-    
-    
+
     [self.layer removeAllAnimations];
     [UIView animateWithDuration:0.3 delay:0.0 options:UIViewAnimationOptionCurveEaseInOut | UIViewKeyframeAnimationOptionBeginFromCurrentState animations:^{
         self.alpha = 0.8;
         self.frame = variableRect;
         self.center = centre;
-        
     } completion:^(BOOL finished) {
         if(finished){
             [UIView animateWithDuration:0.5 delay:0.0 options:UIViewAnimationOptionCurveEaseInOut animations:^{
@@ -97,9 +94,8 @@
                 self.frame = newFrame;
                 self.center = centre;
             } completion:^(BOOL finished) {
-                if(finished){
+                if (finished){
                     [UIView animateKeyframesWithDuration:1.0 delay:0.0 options: UIViewKeyframeAnimationOptionRepeat | UIViewKeyframeAnimationOptionBeginFromCurrentState  animations:^{
-                        
                         [UIView addKeyframeWithRelativeStartTime:0.0 relativeDuration:0.5 animations:^{
                             self.frame = oldFrame;
                             self.center = centre;
@@ -108,7 +104,6 @@
                             self.frame = newFrame;
                             self.center = centre;
                         }];
-                        
                     } completion:^(BOOL finished) {
                         [UIView animateWithDuration:0.2 delay:0.0 options:UIViewAnimationOptionCurveEaseInOut | UIViewKeyframeAnimationOptionBeginFromCurrentState animations:^{
                             self.frame = oldFrame;

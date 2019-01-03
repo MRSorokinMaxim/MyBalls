@@ -18,4 +18,6 @@
 
 - (void)deleteBall;
 
+- (void)determineBackgroundColorDependingOnTouchPoint:(CGPoint)touchPoint;
+
 @end

@@ -8,7 +8,6 @@
 
 #import "BoxBallView.h"
 #import "MultiColorBall.h"
-#import "Header.h"
 
 @implementation BoxBallView
 
@@ -72,6 +71,18 @@ static NSUInteger const kCornerRadius = 12;
 - (void)deleteBall {
     [self.mainBall removeFromSuperview];
     self.mainBall.backgroundBall.alpha = 0.6f;
+}
+
+- (void)determineBackgroundColorDependingOnTouchPoint:(CGPoint)touchPoint {
+    if (CGRectContainsPoint(self.frame, touchPoint) && self.subviews.count) {
+        self.backgroundColor = [UIColor redColor];
+    }
+    else if (CGRectContainsPoint(self.frame, touchPoint) && !self.subviews.count) {
+        self.backgroundColor = [UIColor yellowColor];
+    }
+    else {
+        self.backgroundColor = [UIColor clearColor];
+    }
 }
 
 @end

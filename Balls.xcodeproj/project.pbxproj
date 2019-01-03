@@ -27,7 +27,6 @@
 /* Begin PBXFileReference section */
 		6D35D87E213B37A7004D51B1 /* MultiColorBall.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MultiColorBall.h; sourceTree = "<group>"; };
 		6D35D87F213B37A7004D51B1 /* MultiColorBall.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MultiColorBall.m; sourceTree = "<group>"; };
-		6D5A237E214422F70024CBAF /* Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Header.h; sourceTree = "<group>"; };
 		6D649ADE21275205000A8D9E /* Balls.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Balls.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		6D649AE121275206000A8D9E /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		6D649AE221275206000A8D9E /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -117,7 +116,6 @@
 				6D649B122127635D000A8D9E /* GameView.m */,
 				6D649AFA212753E9000A8D9E /* PresentViewController.h */,
 				6D649AFB212753E9000A8D9E /* PresentViewController.m */,
-				6D5A237E214422F70024CBAF /* Header.h */,
 				6D649B0321275798000A8D9E /* MulticoloredBallsViewModel.h */,
 				6D649B0421275798000A8D9E /* MulticoloredBallsViewModel.m */,
 			);
