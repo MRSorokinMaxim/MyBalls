@@ -14,6 +14,7 @@
 @property (nonatomic) CGSize sizeAnimationBall;
 
 @end
+
 @implementation MultiColorBall
 
 - (id)copyWithZone:(NSZone *)zone {

@@ -86,8 +86,6 @@
 				6D649AE121275206000A8D9E /* AppDelegate.h */,
 				6D649AE221275206000A8D9E /* AppDelegate.m */,
 				6D649B18212B52E3000A8D9E /* SecondScreen */,
-				6D649B0321275798000A8D9E /* MulticoloredBallsViewModel.h */,
-				6D649B0421275798000A8D9E /* MulticoloredBallsViewModel.m */,
 				6D649AE721275206000A8D9E /* Main.storyboard */,
 			);
 			path = Balls;
@@ -120,6 +118,8 @@
 				6D649AFA212753E9000A8D9E /* PresentViewController.h */,
 				6D649AFB212753E9000A8D9E /* PresentViewController.m */,
 				6D5A237E214422F70024CBAF /* Header.h */,
+				6D649B0321275798000A8D9E /* MulticoloredBallsViewModel.h */,
+				6D649B0421275798000A8D9E /* MulticoloredBallsViewModel.m */,
 			);
 			path = SecondScreen;
 			sourceTree = "<group>";

@@ -15,8 +15,9 @@
 
 @interface PresentViewController () <GameViewDrawingDelegate>
 
-@property (strong, nonatomic) MultiColorBall *currentBoxBall;
-
+@property (strong, nonatomic) MultiColorBall *currentBall;
+@property (strong, nonatomic) GameView *gameView;
+@property (strong, nonatomic) MulticoloredBallsViewModel *viewModel;
 @property (nonatomic) BOOL anim;
 
 @end
@@ -45,36 +46,36 @@
 
 
 - (void)addBallFromBox:(BoxBallView *)box {
-    self.currentBoxBall = [MultiColorBall createBallFrom:box.mainBall];
-    [self.gameView addSubview:self.currentBoxBall];
+    self.currentBall = [MultiColorBall createBallFrom:box.mainBall];
+    [self.gameView addSubview:self.currentBall];
 }
 
 - (void)replaceBallAtGameViewFromBox:(BoxBallView *)box {
     [self addBallFromBox:box];
-    [self.viewModel.freePositionBalls addObject:@(box.tag)];
+    [self.viewModel addFreePosition:@(box.tag)];
     [box deleteBall];
     NSLog(@"add free %lu",(unsigned long)box.tag);
 }
 
 - (void)replaceBallAtBox:(BoxBallView *)box {
-    [box createBallWithPathImage:self.currentBoxBall.imagePath];
-    [self.viewModel.freePositionBalls removeObject:@(box.tag)];
-    [self.currentBoxBall deleteBall];
+    [box createBallWithPathImage:self.currentBall.imagePath];
+    [self.viewModel removeFreePosition:@(box.tag)];
+    [self.currentBall deleteBall];
     NSLog(@"remove %lu",(unsigned long)box.tag);
 }
 
 - (void)animationReturnBall {
     __weak PresentViewController *weakSelf = self;
     [UIView animateWithDuration:0.1 animations:^{
-        weakSelf.currentBoxBall.center = weakSelf.currentBoxBall.returnCentre;
+        weakSelf.currentBall.center = weakSelf.currentBall.returnCentre;
     } completion:^(BOOL finished) {
         for (UIView *sourceView in weakSelf.gameView.subviews) {
             if ([sourceView isKindOfClass:[BoxBallView class]]) {
                 BoxBallView *ball = (BoxBallView *)sourceView;
-                if (CGRectContainsPoint(ball.frame, weakSelf.currentBoxBall.returnCentre)) {
+                if (CGRectContainsPoint(ball.frame, weakSelf.currentBall.returnCentre)) {
                     [weakSelf replaceBallAtBox:ball];
-                    weakSelf.currentBoxBall = ball.mainBall;
-                    [weakSelf.currentBoxBall animatingCurrentSizeBall];
+                    weakSelf.currentBall = ball.mainBall;
+                    [weakSelf.currentBall animatingCurrentSizeBall];
                     weakSelf.anim = NO;
                     break;
                 }
@@ -86,9 +87,9 @@
 - (void)pan:(UIPanGestureRecognizer *)gesture {
     CGPoint touchPoint = [gesture locationInView:self.gameView];
     if (gesture.state == UIGestureRecognizerStateBegan && !self.anim) {
-        [self.currentBoxBall animatingRecoveryStandardBallSizeWithCompletionBlock:nil];
+        [self.currentBall animatingRecoveryStandardBallSizeWithCompletionBlock:nil];
         for (UIView *sourceView in self.gameView.subviews) {
-            if ([sourceView isKindOfClass:[BoxBallView class]]) {
+            if ([sourceView isKindOfClass:[BoxBallView class]]) {                
                 BoxBallView *ball = (BoxBallView *)sourceView;
                 if (CGRectContainsPoint(ball.frame, touchPoint) && ball.subviews.count) {
                     NSLog(@"began");
@@ -102,8 +103,8 @@
         for (UIView *sourceView in self.gameView.subviews) {
             if ([sourceView isKindOfClass:[BoxBallView class]]) {
                 BoxBallView *ball = (BoxBallView *)sourceView;
-                [self.currentBoxBall animatingRecoveryStandardBallSizeWithCompletionBlock:nil];
-                self.currentBoxBall.center = touchPoint;
+                [self.currentBall animatingRecoveryStandardBallSizeWithCompletionBlock:nil];
+                self.currentBall.center = touchPoint;
                 if (CGRectContainsPoint(ball.frame, touchPoint) && ball.subviews.count) {
                     ball.backgroundColor = [UIColor redColor];
                 }
@@ -121,13 +122,13 @@
             if ([sourceView isKindOfClass:[BoxBallView class]]) {
                 BoxBallView *ball = (BoxBallView *)sourceView;
                 ball.backgroundColor = [UIColor clearColor];
-                if (CGRectContainsPoint(ball.frame, self.currentBoxBall.center) && !ball.subviews.count) {
+                if (CGRectContainsPoint(ball.frame, self.currentBall.center) && !ball.subviews.count) {
                     [self replaceBallAtBox:ball];
                     [self addNewBallsOnScreen];
                     self.anim = NO;
                     break;
                 }
-                else if (CGRectContainsPoint(ball.frame, self.currentBoxBall.center) && ball.subviews.count) {
+                else if (CGRectContainsPoint(ball.frame, self.currentBall.center) && ball.subviews.count) {
                     [self animationReturnBall];
                     break;
                 }
@@ -144,16 +145,6 @@
 #pragma mark - UITapGestureRecognizer
 
 
-- (BoxBallView *)сhoiseRect:(CGPoint)pointTouch {
-    BoxBallView *returnBall = nil;
-    for (BoxBallView *ball in self.gameView.subviews) {
-        if (CGRectContainsPoint(ball.frame, pointTouch)) {
-            returnBall = ball;
-        }
-    }
-    return returnBall;
-}
-
 - (void)tap:(UITapGestureRecognizer *)gesture {
     if (!self.anim) {
         CGPoint pointTouch = [gesture locationInView:self.gameView];
@@ -161,43 +152,37 @@
     }
 }
 
-- (void)replaceBallFromGameRect:(BoxBallView *)fromGameRect toGameRect:(BoxBallView *)toGameRect {
-    NSLog(@"%@",self.viewModel.freePositionBalls);
-    [self.viewModel.freePositionBalls addObject:@(fromGameRect.tag)];
-    [self.viewModel.freePositionBalls removeObject:@(toGameRect.tag)];
-    [toGameRect createBallWithPathImage:self.currentBoxBall.imagePath];
-    [fromGameRect deleteBall];
-
-}
 - (void)animatingBallAtPoint:(CGPoint)pointTouch {
-    BoxBallView *box = [self сhoiseRect:pointTouch];
-    if (![self.currentBoxBall isEqual:box]) {
-        if (self.currentBoxBall) {
-            __weak PresentViewController *weakSelf = self;
-            [self.currentBoxBall animatingRecoveryStandardBallSizeWithCompletionBlock:^(BOOL finished) {
-                weakSelf.currentBoxBall = box.mainBall;
-                [weakSelf.currentBoxBall animatingCurrentSizeBall];
-            }];
-        }
-        else {
-            self.currentBoxBall = box.mainBall;
-            [self.currentBoxBall animatingCurrentSizeBall];
-        }
+    MultiColorBall *ball = [self сhoiseRect:pointTouch];
+    if (self.currentBall) {
+        __weak PresentViewController *weakSelf = self;
+        [self.currentBall animatingRecoveryStandardBallSizeWithCompletionBlock:^(BOOL finished) {
+            weakSelf.currentBall = ball;
+            [weakSelf.currentBall animatingCurrentSizeBall];
+        }];
     }
     else {
-        [self.currentBoxBall animatingCurrentSizeBall];
+        self.currentBall = ball;
+        [self.currentBall animatingCurrentSizeBall];
     }
 }
 
+- (MultiColorBall *)сhoiseRect:(CGPoint)pointTouch {
+    MultiColorBall *returnBall = nil;
+    for (BoxBallView *box in self.gameView.subviews) {
+        if (CGRectContainsPoint(box.frame, pointTouch)) {
+            returnBall = box.mainBall;
+        }
+    }
+    return returnBall;
+}
 
 
 #pragma mark - GameViewDrawingDelegate
 
 
 - (void)start {
-    for (NSUInteger position = 0; position < self.gameView.subviews.count; position++) {
-        [self.viewModel.freePositionBalls addObject:@(position)];
-    }
+    [self.viewModel fillFreePositionsWithNumbers:self.gameView.subviews.count];
     [self addNewBallsOnScreen];
 }
 
@@ -206,19 +191,10 @@
 
 
 - (void)addNewBallsOnScreen {
-    NSUInteger countBallForDraw = 3;//arc4random() % 4 + 1;
-    while (countBallForDraw) {
-        NSNumber *randomPositionForDrawBall = @(arc4random() % self.gameView.subviews.count);
-        if ([self.viewModel.freePositionBalls containsObject:randomPositionForDrawBall]) {
-            [self.viewModel.freePositionBalls removeObject:randomPositionForDrawBall];
-            NSString *pathImageBall = [MulticoloredBallsViewModel randomImageNameBall];
-            [(BoxBallView *)self.gameView.subviews[randomPositionForDrawBall.integerValue] createBallWithPathImage:pathImageBall];
-            countBallForDraw--;
-        }
-        if (!self.viewModel.freePositionBalls.count) {
-            break;
-        }
+    NSSet *freePositions = [self.viewModel searchFreePositionAmongNumbers:self.gameView.subviews.count];
+    for (NSNumber *freePosition in freePositions) {
+        NSString *pathImageBall = [self.viewModel randomImageNameBall];
+        [(BoxBallView *)self.gameView.subviews[freePosition.integerValue] createBallWithPathImage:pathImageBall];
     }
-    
 }
 @end

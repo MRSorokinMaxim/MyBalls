@@ -8,12 +8,6 @@
 
 #import <UIKit/UIKit.h>
 
-@class GameView;
-@class MulticoloredBallsViewModel;
-
 @interface PresentViewController : UIViewController
-
-@property (strong, nonatomic) GameView *gameView;
-@property (strong, nonatomic) MulticoloredBallsViewModel *viewModel;
 
 @end

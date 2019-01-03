@@ -8,12 +8,16 @@
 
 #import <Foundation/Foundation.h>
 
-@class BoxBallView;
-
 @interface MulticoloredBallsViewModel : NSObject
 
-@property (strong, nonatomic) NSMutableSet *freePositionBalls;
+- (NSString *)randomImageNameBall;
 
-+ (NSString *)randomImageNameBall;
+- (NSSet *)searchFreePositionAmongNumbers:(NSUInteger)allNumbers;
+
+- (void)fillFreePositionsWithNumbers:(NSUInteger)allNumbers;
+
+- (void)addFreePosition:(NSNumber *)number;
+
+- (void)removeFreePosition:(NSNumber *)number;
 
 @end
