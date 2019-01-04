@@ -1,0 +1,15 @@
+platform :ios, '10.0'
+
+use_frameworks!
+inhibit_all_warnings!
+
+target 'Balls' do
+
+  target 'BallsTests' do
+    	inherit! :search_paths 
+	pod 'Expecta', :configuration => 'Debug'
+	pod 'OCMock', :configuration => 'Debug'
+	pod 'Specta', :configuration => 'Debug'
+  end
+
+end
