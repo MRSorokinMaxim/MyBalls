@@ -12,7 +12,25 @@
 		<key>Balls.xcscheme_^#shared#^_</key>
 		<dict>
 			<key>orderHint</key>
-			<integer>0</integer>
+			<integer>5</integer>
+		</dict>
+		<key>BallsTests.xcscheme_^#shared#^_</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>6</integer>
+		</dict>
+	</dict>
+	<key>SuppressBuildableAutocreation</key>
+	<dict>
+		<key>6D22B3FA21DFEF1000D50FD2</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>6D649ADD21275205000A8D9E</key>
+		<dict>
+			<key>primary</key>
+			<true/>
 		</dict>
 	</dict>
 </dict>

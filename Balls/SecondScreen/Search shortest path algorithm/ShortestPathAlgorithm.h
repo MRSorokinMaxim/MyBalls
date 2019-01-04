@@ -10,5 +10,7 @@
 
 @interface ShortestPathAlgorithm : NSObject
 
+- (NSMutableArray *)start;
+
 @end
 

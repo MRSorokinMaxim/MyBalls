@@ -10,7 +10,7 @@
 
 @interface ShortestPathAlgorithm ()
 
-@property (nonatomic, strong) NSArray *gridBalls;
+@property (nonatomic, strong) NSMutableArray *gridBalls;
 @property (nonatomic) NSInteger countBallOnWidth;
 @property (nonatomic) NSInteger countBallOnHeight;
 

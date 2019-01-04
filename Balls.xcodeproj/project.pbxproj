@@ -10,8 +10,8 @@
 		113C1E4BCC5A724A54BB2D9B /* Pods_Balls.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 93B9D1843A0569E7A3CB2DBA /* Pods_Balls.framework */; };
 		6CF9E5FCFEA8DFCEFC3A225E /* Pods_BallsTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7ED492E1A81784BEFD1F789E /* Pods_BallsTests.framework */; };
 		6D22B3F621DFD6F300D50FD2 /* ShortestPathAlgorithm.m in Sources */ = {isa = PBXBuildFile; fileRef = 6D22B3F521DFD6F300D50FD2 /* ShortestPathAlgorithm.m */; };
-		6D22B3FE21DFEF1000D50FD2 /* BallsTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 6D22B3FD21DFEF1000D50FD2 /* BallsTests.m */; };
 		6D35D880213B37A7004D51B1 /* MultiColorBall.m in Sources */ = {isa = PBXBuildFile; fileRef = 6D35D87F213B37A7004D51B1 /* MultiColorBall.m */; };
+		6D3DA03F21DFF48C0024E788 /* ShortestPathAlgorithmTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 6D3DA03E21DFF48C0024E788 /* ShortestPathAlgorithmTests.m */; };
 		6D649AE321275206000A8D9E /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 6D649AE221275206000A8D9E /* AppDelegate.m */; };
 		6D649AE921275206000A8D9E /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6D649AE721275206000A8D9E /* Main.storyboard */; };
 		6D649AEB2127520B000A8D9E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6D649AEA2127520B000A8D9E /* Assets.xcassets */; };
@@ -44,10 +44,10 @@
 		6D22B3F421DFD6F300D50FD2 /* ShortestPathAlgorithm.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ShortestPathAlgorithm.h; sourceTree = "<group>"; };
 		6D22B3F521DFD6F300D50FD2 /* ShortestPathAlgorithm.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ShortestPathAlgorithm.m; sourceTree = "<group>"; };
 		6D22B3FB21DFEF1000D50FD2 /* BallsTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = BallsTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		6D22B3FD21DFEF1000D50FD2 /* BallsTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BallsTests.m; sourceTree = "<group>"; };
 		6D22B3FF21DFEF1000D50FD2 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		6D35D87E213B37A7004D51B1 /* MultiColorBall.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MultiColorBall.h; sourceTree = "<group>"; };
 		6D35D87F213B37A7004D51B1 /* MultiColorBall.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MultiColorBall.m; sourceTree = "<group>"; };
+		6D3DA03E21DFF48C0024E788 /* ShortestPathAlgorithmTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ShortestPathAlgorithmTests.m; sourceTree = "<group>"; };
 		6D649ADE21275205000A8D9E /* Balls.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Balls.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		6D649AE121275206000A8D9E /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		6D649AE221275206000A8D9E /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -118,7 +118,7 @@
 		6D22B3FC21DFEF1000D50FD2 /* BallsTests */ = {
 			isa = PBXGroup;
 			children = (
-				6D22B3FD21DFEF1000D50FD2 /* BallsTests.m */,
+				6D3DA03E21DFF48C0024E788 /* ShortestPathAlgorithmTests.m */,
 				6D22B3FF21DFEF1000D50FD2 /* Info.plist */,
 			);
 			path = BallsTests;
@@ -416,7 +416,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				6D22B3FE21DFEF1000D50FD2 /* BallsTests.m in Sources */,
+				6D3DA03F21DFF48C0024E788 /* ShortestPathAlgorithmTests.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -626,14 +626,14 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = G92J989NJ6;
+				DEVELOPMENT_TEAM = Z945JY3H6X;
 				INFOPLIST_FILE = Balls/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = mrSorokin.Balls;
+				PRODUCT_BUNDLE_IDENTIFIER = mrSorokinMaxim.Balls;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -645,14 +645,14 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = G92J989NJ6;
+				DEVELOPMENT_TEAM = Z945JY3H6X;
 				INFOPLIST_FILE = Balls/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = mrSorokin.Balls;
+				PRODUCT_BUNDLE_IDENTIFIER = mrSorokinMaxim.Balls;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
