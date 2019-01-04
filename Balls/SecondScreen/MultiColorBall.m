@@ -21,7 +21,7 @@
     if (ball) {
         ball.imagePath = [_imagePath copy];
         ball.returnCentre = _returnCentre;
-        ball.image = [UIImage imageNamed:ball.imagePath];
+        ball.image = [UIImage imageNamed:[_imagePath copy]];
         ball.backgroundBall = _backgroundBall;
     }
     return ball;
@@ -29,9 +29,9 @@
 
 - (void)addBallImageWithPath:(NSString *)path {
     self.backgroundBall = [[MultiColorBall alloc] initWithFrame:self.bounds];
-    self.backgroundBall.image = [UIImage imageNamed:path];
+    self.backgroundBall.image = [UIImage imageNamed:[path copy]];
     self.backgroundBall.alpha = 0.0f;
-    self.image = [UIImage imageNamed:path];
+    self.image = [UIImage imageNamed:[path copy]];
     self.imagePath = path;
 }
 
@@ -44,6 +44,7 @@
 - (void)deleteBall {
     [self.backgroundBall removeFromSuperview];
     [self removeFromSuperview];
+    self.backgroundBall = nil;
     self.imagePath = nil;
 }
 
@@ -117,5 +118,16 @@
     }];
 }
 
+- (void)animateRemovingWithCompletionBlock:(void(^)(BOOL finished))complection {
+    CGRect screenRect = [[UIScreen mainScreen] bounds];
+    CGFloat offsetX = (arc4random() % (NSUInteger)(CGRectGetWidth(screenRect) * 5)) - CGRectGetWidth(screenRect) * 2;
+    CGFloat offsetY = CGRectGetHeight(screenRect);
+    [UIView animateWithDuration:1.0 animations:^{
+        self.center = CGPointMake(offsetX, -offsetY);
+    } completion:^(BOOL finished) {
+        [self deleteBall];
+        complection ? complection(finished) : nil;
+    }];
+}
 
 @end

@@ -27,4 +27,6 @@ static const NSUInteger kHeightRectBall = 100;
 
 - (void)animatingCurrentSizeBall;
 
+- (void)animateRemovingWithCompletionBlock:(void(^)(BOOL finished))complection;
+
 @end

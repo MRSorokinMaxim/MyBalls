@@ -101,23 +101,23 @@
 #pragma mark - UIPanGestureRecognizer
 
 
-- (void)addBallFromBox:(BoxBallView *)box {
-    self.currentBall = [MultiColorBall createBallFrom:box.mainBall];
+- (void)createBallFromBoxView:(BoxBallView *)boxView {
+    self.currentBall = [MultiColorBall createBallFrom:boxView.mainBall];
     [self addSubview:self.currentBall];
 }
 
-- (void)replaceBallAtGameViewFromBox:(BoxBallView *)box {
-    [self addBallFromBox:box];
-    [self.delegate freePosition:box.tag];
-    [box deleteBall];
-    NSLog(@"add free %lu",(unsigned long)box.tag);
+- (void)replaceBallToGameViewFromBoxView:(BoxBallView *)boxView {
+    [self createBallFromBoxView:boxView];
+    [self.delegate freePosition:boxView.tag];
+    [boxView deleteBall];
+    NSLog(@"add free %lu",(unsigned long)boxView.tag);
 }
 
-- (void)replaceBallAtBox:(BoxBallView *)box {
-    [box createBallWithPathImage:self.currentBall.imagePath];
-    [self.delegate takePosition:box.tag];
+- (void)replaceBallFromGameViewToBoxView:(BoxBallView *)boxView {
+    [boxView createBallWithPathImage:self.currentBall.imagePath];
+    [self.delegate takePosition:boxView.tag];
     [self.currentBall deleteBall];
-    NSLog(@"remove %lu",(unsigned long)box.tag);
+    NSLog(@"remove %lu",(unsigned long)boxView.tag);
 }
 
 - (void)animationReturnBall {
@@ -127,10 +127,9 @@
     } completion:^(BOOL finished) {
         UIView *sourceView = [weakSelf hitTest:weakSelf.currentBall.returnCentre withEvent:nil];
         if ([sourceView isKindOfClass:[BoxBallView class]]) {
-            BoxBallView *box = (BoxBallView *)sourceView;
-            [weakSelf replaceBallAtBox:box];
-            weakSelf.currentBall = box.mainBall;
-            [box.mainBall animatingCurrentSizeBall];
+            BoxBallView *boxView = (BoxBallView *)sourceView;
+            [weakSelf replaceBallFromGameViewToBoxView:boxView];
+            [boxView.mainBall animatingCurrentSizeBall];
             weakSelf.movingBall = NO;
         }
     }];
@@ -143,11 +142,11 @@
         [self.currentBall animatingRecoveryStandardBallSizeWithCompletionBlock:nil];
         UIView *sourceView = [self hitTest:touchPoint withEvent:nil];
         if ([sourceView isKindOfClass:[BoxBallView class]]) {
-            BoxBallView *box = (BoxBallView *)sourceView;
-            if (CGRectContainsPoint(box.frame, touchPoint) && box.subviews.count) {
+            BoxBallView *boxView = (BoxBallView *)sourceView;
+            if (CGRectContainsPoint(boxView.frame, touchPoint) && boxView.subviews.count) {
                 NSLog(@"began");
                 self.movingBall = YES;
-                [self replaceBallAtGameViewFromBox:box];
+                [self replaceBallToGameViewFromBoxView:boxView];
             }
         }
     }
@@ -155,24 +154,25 @@
         for (UIView *sourceView in self.subviews) {
             if ([sourceView isKindOfClass:[BoxBallView class]]) {
                 [self.currentBall animatingRecoveryStandardBallSizeWithCompletionBlock:nil];
-                BoxBallView *box = (BoxBallView *)sourceView;
+                BoxBallView *boxView = (BoxBallView *)sourceView;
                 [self.currentBall animatingRecoveryStandardBallSizeWithCompletionBlock:nil];
                 self.currentBall.center = touchPoint;
-                [box determineBackgroundColorDependingOnTouchPoint:touchPoint];
+                [boxView determineBackgroundColorDependingOnTouchPoint:touchPoint];
             }
         }
     }
     else if (gesture.state == UIGestureRecognizerStateEnded && self.movingBall) {
         UIView *sourceView = [self hitTest:touchPoint withEvent:nil];
         if ([sourceView isKindOfClass:[BoxBallView class]]) {
-            BoxBallView *box = (BoxBallView *)sourceView;
-            box.backgroundColor = [UIColor clearColor];
-            if (CGRectContainsPoint(box.frame, self.currentBall.center) && !box.subviews.count) {
-                [self replaceBallAtBox:box];
+            BoxBallView *boxView = (BoxBallView *)sourceView;
+            boxView.backgroundColor = [UIColor clearColor];
+            if (CGRectContainsPoint(boxView.frame, self.currentBall.center) && !boxView.subviews.count) {
+                [self replaceBallFromGameViewToBoxView:boxView];
+                [self deleteBalls];
                 [self.delegate addNewBallsOnGameView];
                 self.movingBall = NO;
             }
-            else if (CGRectContainsPoint(box.frame, self.currentBall.center) && box.subviews.count) {
+            else if (CGRectContainsPoint(boxView.frame, self.currentBall.center) && boxView.subviews.count) {
                 [self animationReturnBall];
             }
         }
@@ -210,13 +210,79 @@
 
 - (MultiColorBall *)сhoiseRect:(CGPoint)pointTouch {
     MultiColorBall *returnBall = nil;
-    for (BoxBallView *box in self.subviews) {
-        if (CGRectContainsPoint(box.frame, pointTouch)) {
-            returnBall = box.mainBall;
+    for (BoxBallView *boxView in self.subviews) {
+        if (CGRectContainsPoint(boxView.frame, pointTouch)) {
+            returnBall = boxView.mainBall;
         }
     }
     return returnBall;
 }
 
+
+#pragma mark - Delete Balls
+
+
+- (void)deleteBalls {
+    NSMutableSet *ballsNumbersToDelete = [[NSMutableSet alloc] init];
+    for (NSUInteger positionBox = 0; positionBox < self.subviews.count; positionBox++) {
+        if ([self.subviews[positionBox] isKindOfClass:[BoxBallView class]]) {
+            BoxBallView *boxView = (BoxBallView *)self.subviews[positionBox];
+            if (boxView.subviews.count) {
+                NSArray *numbersBallsNearbyToBeRemove = [self searchNumbersBallsAroundSourceBox:positionBox withSamePathImage:boxView.mainBall.imagePath];
+                if (numbersBallsNearbyToBeRemove.count > 1) {
+                    [ballsNumbersToDelete addObject:@(positionBox)];
+                    [ballsNumbersToDelete addObjectsFromArray:numbersBallsNearbyToBeRemove];
+                }
+            }
+        }
+    }
+    if (ballsNumbersToDelete.count > 2) {
+        [self animateRemovingBalls:ballsNumbersToDelete];
+    }
+}
+
+- (NSArray *)searchNumbersBallsAroundSourceBox:(NSUInteger)positionBox withSamePathImage:(NSString *)pathImage  {
+    NSMutableArray *numbersBallsToDelete = [[NSMutableArray alloc] init];
+    NSArray *numbersBallsNearby = [self searchAllPossibleNumbersBallsAroundSourceBox:positionBox];
+    for (NSNumber *checkNumberBox in numbersBallsNearby) {
+        BoxBallView *checkBox = (BoxBallView *)self.subviews[checkNumberBox.integerValue];
+        if (checkBox.subviews.count && [checkBox.mainBall.imagePath isEqualToString:pathImage]) {
+            [numbersBallsToDelete addObject:checkNumberBox];
+        }
+    }
+    return numbersBallsToDelete;
+}
+
+- (NSArray *)searchAllPossibleNumbersBallsAroundSourceBox:(NSUInteger)positionBox {
+    NSMutableArray *result = [[NSMutableArray alloc] init];
+    NSUInteger nextPositionBox = [self notLastBallAtHeightForPosition:positionBox] ? positionBox + 1 : -1;
+    NSUInteger prevPositionBox = [self notFirstBallAtHeightForPosition:positionBox] ? positionBox - 1 : -1;
+    NSUInteger rightPositionBox = positionBox + [self countBallOnHeight];
+    NSUInteger leftPositionBox = positionBox - [self countBallOnHeight];
+    NSArray *allPosition = @[@(nextPositionBox),@(prevPositionBox),@(rightPositionBox),@(leftPositionBox)];
+    for (NSNumber *position in allPosition) {
+        if (position.integerValue >= 0 && position.integerValue < self.subviews.count) {
+            [result addObject:position];
+        }
+    }
+    return result;
+}
+
+- (BOOL)notFirstBallAtHeightForPosition:(NSUInteger)currentPositionBox {
+    return currentPositionBox % [self countBallOnHeight] != 0;
+}
+
+- (BOOL)notLastBallAtHeightForPosition:(NSUInteger)currentPositionBox {
+    return currentPositionBox % [self countBallOnHeight] != [self countBallOnHeight] - 1;
+}
+
+- (void)animateRemovingBalls:(NSSet *)dropBallsNumbers {
+    for (NSNumber *dropBallNumber in dropBallsNumbers) {
+        BoxBallView *dropBoxView = self.subviews[dropBallNumber.integerValue];
+        [dropBoxView.mainBall animateRemovingWithCompletionBlock:^(BOOL finished) {
+            finished ? [self.delegate freePosition:dropBoxView.tag] : nil;
+        }];
+    }
+}
 
 @end

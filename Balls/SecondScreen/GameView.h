@@ -26,8 +26,4 @@
 
 - (void)addBallOnPosition:(NSUInteger)freePosition withPathImage:(NSString *)pathImage;
 
-- (void)panHandler:(UIPanGestureRecognizer *)gesture;
-
-- (void)tapHandler:(UITapGestureRecognizer *)gesture;
-
 @end

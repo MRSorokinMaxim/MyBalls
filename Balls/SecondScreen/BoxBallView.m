@@ -46,8 +46,8 @@ static NSUInteger const kCornerRadius = 12;
     self = [super initWithFrame:frame];
     if(self){
         [self setup];
-        _mainBall = [[MultiColorBall alloc] initWithFrame:self.bounds];
-        _mainBall.returnCentre = self.center;
+        self.mainBall = [[MultiColorBall alloc] initWithFrame:self.bounds];
+        self.mainBall.returnCentre = self.center;
     }
     return self;
 }
@@ -63,6 +63,8 @@ static NSUInteger const kCornerRadius = 12;
 
 
 - (void)createBallWithPathImage:(NSString *)pathBallImage {
+    self.mainBall = [[MultiColorBall alloc] initWithFrame:self.bounds];
+    self.mainBall.returnCentre = self.center;
     [self.mainBall addBallImageWithPath:pathBallImage];
     [self addSubview:self.mainBall.backgroundBall];
     [self addSubview:self.mainBall];
