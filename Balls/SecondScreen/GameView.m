@@ -255,10 +255,10 @@
 
 - (NSArray *)searchAllPossibleNumbersBallsAroundSourceBox:(NSUInteger)positionBox {
     NSMutableArray *result = [[NSMutableArray alloc] init];
-    NSUInteger nextPositionBox = [self notLastBallAtHeightForPosition:positionBox] ? positionBox + 1 : -1;
-    NSUInteger prevPositionBox = [self notFirstBallAtHeightForPosition:positionBox] ? positionBox - 1 : -1;
-    NSUInteger rightPositionBox = positionBox + [self countBallOnHeight];
-    NSUInteger leftPositionBox = positionBox - [self countBallOnHeight];
+    NSInteger nextPositionBox = [self notLastBallAtHeightForPosition:positionBox] ? positionBox + 1 : -1;
+    NSInteger prevPositionBox = [self notFirstBallAtHeightForPosition:positionBox] ? positionBox - 1 : -1;
+    NSInteger rightPositionBox = positionBox + [self countBallOnHeight];
+    NSInteger leftPositionBox = positionBox - [self countBallOnHeight];
     NSArray *allPosition = @[@(nextPositionBox),@(prevPositionBox),@(rightPositionBox),@(leftPositionBox)];
     for (NSNumber *position in allPosition) {
         if (position.integerValue >= 0 && position.integerValue < self.subviews.count) {
