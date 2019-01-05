@@ -11,6 +11,7 @@
 @interface ShortestPathAlgorithm ()
 
 @property (nonatomic, strong) NSMutableArray *gridBalls;
+
 @property (nonatomic) NSInteger countBallOnWidth;
 @property (nonatomic) NSInteger countBallOnHeight;
 
@@ -24,68 +25,84 @@
 static const NSInteger kWall = -1;
 static const NSInteger kBlank = -2;
 
+- (NSArray *)searchAllPossibleNumbersBallsAroundSourceBox:(NSUInteger)position {
+    NSMutableArray *result = [[NSMutableArray alloc] init];
+    NSInteger nextPositionBox = [self notLastBallAtHeightForPosition:position] ? position + 1 : -1;
+    NSInteger prevPositionBox = [self notFirstBallAtHeightForPosition:position] ? position - 1 : -1;
+    NSInteger rightPositionBox = position + [self countBallOnHeight];
+    NSInteger leftPositionBox = position - [self countBallOnHeight];
+    NSArray *allPosition = @[@(nextPositionBox),@(prevPositionBox),@(rightPositionBox),@(leftPositionBox)];
+    for (NSNumber *position in allPosition) {
+        if (position.integerValue >= 0 && position.integerValue < self.countBallOnWidth * self.countBallOnHeight) {
+            [result addObject:position];
+        }
+    }
+    return result;
+}
+
+- (BOOL)notFirstBallAtHeightForPosition:(NSUInteger)currentPositionBox {
+    return currentPositionBox % [self countBallOnHeight] != 0;
+}
+
+- (BOOL)notLastBallAtHeightForPosition:(NSUInteger)currentPositionBox {
+    return currentPositionBox % [self countBallOnHeight] != [self countBallOnHeight] - 1;
+}
 
 - (NSMutableArray *)start {
-    NSUInteger grid[self.countBallOnWidth * self.countBallOnHeight];
-    for (NSUInteger index = 0; index < self.gridBalls.count; index++) {
-        grid[index] = [self.gridBalls[index] isEqual:@1] ? kWall : kBlank;
+    NSMutableArray *grid = [[NSMutableArray alloc] init];
+    for (NSUInteger position = 0; position < self.gridBalls.count; position++) {
+        grid[position] = @([self.gridBalls[position] isEqual:@1] ? kWall : kBlank);
     }
     
-    grid[self.startPosition] = 0;// стартовая ячейка помечена 0
+    grid[self.startPosition] = @(0);// стартовая ячейка помечена 0
     
-    int d, y, k;
-    bool stop;
-    d = 0;
+    NSInteger step = 0;
+    BOOL stop;
     
     do {
         stop = true;               // предполагаем, что все свободные клетки уже помечены
-        for (y = 0; y < self.countBallOnWidth * self.countBallOnHeight; y++){
-            if (grid[y] == d) {                         // ячейка (x, y) помечена числом d
-                int a=y+1,b=y-1;
-                if (y % self.countBallOnHeight == self.countBallOnHeight - 1) a=-1;
-                if (y % self.countBallOnHeight == 0) b=-1;
-                int orientationMove[4] = {a, b, y + self.countBallOnHeight, y - self.countBallOnHeight};
-                
-                for (k = 0; k < 4; ++k) {                  // проходим по всем непомеченным соседям
-                    if (orientationMove[k] >= 0 && orientationMove[k] < (self.countBallOnWidth * self.countBallOnHeight) && grid[orientationMove[k]] == kBlank){
+        for (NSUInteger position = 0; position < self.countBallOnWidth * self.countBallOnHeight; position++){
+            if ([grid[position] isEqual:@(step)]) {                         // ячейка (x, y) помечена числом step
+                NSArray *orientationMovePosition = [self searchAllPossibleNumbersBallsAroundSourceBox:position];
+                for (NSNumber *orientationPosition in orientationMovePosition) {
+                    if ([grid[orientationPosition.integerValue] isEqual:@(kBlank)]) {
                         stop = false;              // найдены непомеченные клетки
-                        grid[orientationMove[k]] = d + 1;      // распространяем волну
+                        grid[orientationPosition.integerValue] = @(step + 1);      // распространяем волну
                     }
                 }
             }
         }
-        d++;
-    } while ( !stop && grid[self.endPosition] == kBlank );
+        step++;
+    } while (!stop && [grid[self.endPosition] isEqual:@(kBlank)]);
     
-    if (grid[self.endPosition] == kBlank) NSLog(@"путь не найден");
+    if ([grid[self.endPosition] isEqual:@(kBlank)]) {
+        NSLog(@"путь не найден");
+        return [@[] mutableCopy];
+    }
     
     // восстановление пути
-    int px[self.countBallOnWidth * self.countBallOnHeight];
     
-    int len = grid[self.endPosition];            // длина кратчайшего пути из self.startPosition в self.endPosition
-    int x = self.endPosition;
-    d = len;
-    while (d > 0) {
-        px[d] = x;  // записываем ячейку (x, y) в путь
-        d--;
-        for (k = 0; k < 4; ++k) {
-            int a = x + 1, b = x - 1;
-            if (x % self.countBallOnHeight == self.countBallOnHeight - 1) a=-1;
-            if (x % self.countBallOnHeight == 0) b=-1;
-            int orientationMove [4] = {a, b, x + self.countBallOnHeight, x - self.countBallOnHeight};
-            if (orientationMove[k] >= 0 && orientationMove[k] < (self.countBallOnWidth * self.countBallOnHeight) && grid[orientationMove[k]] == d){
-                x = orientationMove[k]; // переходим в ячейку, которая на 1 ближе к старту
+    NSInteger len = ((NSNumber *)grid[self.endPosition]).integerValue;            // длина кратчайшего пути из self.startPosition в self.endPosition
+    NSMutableArray *path = [[NSMutableArray alloc] init];
+    for (NSInteger index = 0; index <= len; index++) {
+        [path addObject:@(0)];
+    }
+    NSInteger position = self.endPosition;
+    step = len;
+    while (step > 0) {
+        path[step] = @(position);  // записываем ячейку (x, y) в путь
+        step--;
+        NSArray *orientationMovePosition = [self searchAllPossibleNumbersBallsAroundSourceBox:position];
+        for (NSNumber *orientationPosition in orientationMovePosition) {
+            if ([grid[orientationPosition.integerValue] isEqual:@(step)]) {
+                position = orientationPosition.integerValue; // переходим в ячейку, которая на 1 ближе к старту
                 break;
             }
         }
     }
-    px[0] = self.startPosition;                   // теперь px[0..len]  - координаты ячеек пути
-    
-    NSMutableArray *arrayCoordinate = [[NSMutableArray alloc]init];
-    for(int i = 0; i <= len; i++){
-        [arrayCoordinate addObject:@(px[i])];
-    }
-    return arrayCoordinate;
+    path[0] = @(self.startPosition);                   // теперь px[0..len]  - координаты ячеек пути
+
+    return path;
 }
 
 @end
