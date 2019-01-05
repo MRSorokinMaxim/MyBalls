@@ -10,11 +10,12 @@
 
 #import "BoxBallView.h"
 #import "MultiColorBall.h"
+#import "GridGameView.h"
 
 @interface GameView ()
 
 @property (strong, nonatomic) MultiColorBall *currentBall;
-
+@property (strong, nonatomic) GridGameView *gridGameView;
 @property (nonatomic) BOOL movingBall;
 
 @end
@@ -27,7 +28,7 @@
 
 - (void)setup {
     self.backgroundColor = nil;
-    self.opaque= NO;
+    self.opaque = NO;
     self.contentMode = UIViewContentModeRedraw;
     [self setNeedsDisplay];
     
@@ -36,6 +37,8 @@
     UIPanGestureRecognizer *panGestureRecognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(panHandler:)];
     panGestureRecognizer.maximumNumberOfTouches = 1;
     [self addGestureRecognizer:panGestureRecognizer];
+    
+    self.gridGameView = [[GridGameView alloc] initWithFrame:self.bounds];
 }
 
 - (void)awakeFromNib {
@@ -63,32 +66,14 @@
 
 #pragma mark - Private
 
-
-- (NSUInteger)countBallOnWidth {
-    return (NSUInteger)CGRectGetWidth(self.bounds) / kWidthRectBall;
-}
-
-- (NSUInteger)countBallOnHeight {
-    return (NSUInteger)CGRectGetHeight(self.bounds) / kHeightRectBall;
-}
-
-- (CGFloat)offsetToX {
-    return CGRectGetWidth(self.bounds) - kWidthRectBall * [self countBallOnWidth];
-}
-
-- (CGFloat)offsetToY {
-    return CGRectGetHeight(self.bounds) - kWidthRectBall * [self countBallOnHeight];
-}
-
 - (void)setupBoxViews {
-    for (NSUInteger countBallOnWidth = 0; countBallOnWidth < [self countBallOnWidth]; countBallOnWidth++){
-        for (NSUInteger countBallOnHeight = 0; countBallOnHeight < [self countBallOnHeight]; countBallOnHeight++) {
-            CGRect frame = CGRectMake(countBallOnWidth * kWidthRectBall + [self offsetToX] / 2,
-                                      countBallOnHeight * kHeightRectBall + [self offsetToY] / 2,
-                                      kWidthRectBall,
-                                      kHeightRectBall);
-            BoxBallView *boxView = [[BoxBallView alloc] initWithFrame:frame];
-            boxView.tag = countBallOnWidth * [self countBallOnHeight] + countBallOnHeight;
+    for (NSUInteger positionOnWidth = 0; positionOnWidth < self.gridGameView.countPositionOnWidth; positionOnWidth++){
+        for (NSUInteger positionOnHeight = 0; positionOnHeight < self.gridGameView.countPositionOnHeight; positionOnHeight++) {
+            CGRect frameBoxView = [self.gridGameView frameBoxViewForBallAtPositionOnWidth:positionOnWidth
+                                                                         positionOnHeight:positionOnHeight];
+            BoxBallView *boxView = [[BoxBallView alloc] initWithFrame:frameBoxView];
+            boxView.tag = [self.gridGameView ordinalNumberForBallAtPositionOnWidth:positionOnWidth
+                                                                  positionOnHeight:positionOnHeight];
             [self addSubview:boxView];
         }
     }
@@ -210,10 +195,10 @@
 
 - (MultiColorBall *)сhoiseRect:(CGPoint)pointTouch {
     MultiColorBall *returnBall = nil;
-    for (BoxBallView *boxView in self.subviews) {
-        if (CGRectContainsPoint(boxView.frame, pointTouch)) {
-            returnBall = boxView.mainBall;
-        }
+    UIView *sourceView = [self hitTest:pointTouch withEvent:nil];
+    if ([sourceView isKindOfClass:[BoxBallView class]]) {
+        BoxBallView *boxView = (BoxBallView *)sourceView;
+        returnBall = boxView.mainBall;
     }
     return returnBall;
 }
@@ -243,37 +228,14 @@
 
 - (NSArray *)searchNumbersBallsAroundSourceBox:(NSUInteger)positionBox withSamePathImage:(NSString *)pathImage  {
     NSMutableArray *numbersBallsToDelete = [[NSMutableArray alloc] init];
-    NSArray *numbersBallsNearby = [self searchAllPossibleNumbersBallsAroundSourceBox:positionBox];
+    NSArray *numbersBallsNearby = [self.gridGameView searchOrientingMovementsAroundSourcePosition:positionBox];
     for (NSNumber *checkNumberBox in numbersBallsNearby) {
-        BoxBallView *checkBox = (BoxBallView *)self.subviews[checkNumberBox.integerValue];
-        if (checkBox.subviews.count && [checkBox.mainBall.imagePath isEqualToString:pathImage]) {
+        BoxBallView *checkBoxView = (BoxBallView *)self.subviews[checkNumberBox.integerValue];
+        if (checkBoxView.subviews.count && [checkBoxView.mainBall.imagePath isEqualToString:pathImage]) {
             [numbersBallsToDelete addObject:checkNumberBox];
         }
     }
     return numbersBallsToDelete;
-}
-
-- (NSArray *)searchAllPossibleNumbersBallsAroundSourceBox:(NSUInteger)positionBox {
-    NSMutableArray *result = [[NSMutableArray alloc] init];
-    NSInteger nextPositionBox = [self notLastBallAtHeightForPosition:positionBox] ? positionBox + 1 : -1;
-    NSInteger prevPositionBox = [self notFirstBallAtHeightForPosition:positionBox] ? positionBox - 1 : -1;
-    NSInteger rightPositionBox = positionBox + [self countBallOnHeight];
-    NSInteger leftPositionBox = positionBox - [self countBallOnHeight];
-    NSArray *allPosition = @[@(nextPositionBox),@(prevPositionBox),@(rightPositionBox),@(leftPositionBox)];
-    for (NSNumber *position in allPosition) {
-        if (position.integerValue >= 0 && position.integerValue < self.subviews.count) {
-            [result addObject:position];
-        }
-    }
-    return result;
-}
-
-- (BOOL)notFirstBallAtHeightForPosition:(NSUInteger)currentPositionBox {
-    return currentPositionBox % [self countBallOnHeight] != 0;
-}
-
-- (BOOL)notLastBallAtHeightForPosition:(NSUInteger)currentPositionBox {
-    return currentPositionBox % [self countBallOnHeight] != [self countBallOnHeight] - 1;
 }
 
 - (void)animateRemovingBalls:(NSSet *)dropBallsNumbers {

@@ -12,6 +12,8 @@
 		6D22B3F621DFD6F300D50FD2 /* ShortestPathAlgorithm.m in Sources */ = {isa = PBXBuildFile; fileRef = 6D22B3F521DFD6F300D50FD2 /* ShortestPathAlgorithm.m */; };
 		6D35D880213B37A7004D51B1 /* MultiColorBall.m in Sources */ = {isa = PBXBuildFile; fileRef = 6D35D87F213B37A7004D51B1 /* MultiColorBall.m */; };
 		6D3DA03F21DFF48C0024E788 /* ShortestPathAlgorithmTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 6D3DA03E21DFF48C0024E788 /* ShortestPathAlgorithmTests.m */; };
+		6D3DA04621E0EF900024E788 /* GridGameView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6D3DA04521E0EF900024E788 /* GridGameView.m */; };
+		6D3DA04921E0F0E50024E788 /* AppSettings.m in Sources */ = {isa = PBXBuildFile; fileRef = 6D3DA04821E0F0E50024E788 /* AppSettings.m */; };
 		6D649AE321275206000A8D9E /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 6D649AE221275206000A8D9E /* AppDelegate.m */; };
 		6D649AE921275206000A8D9E /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6D649AE721275206000A8D9E /* Main.storyboard */; };
 		6D649AEB2127520B000A8D9E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6D649AEA2127520B000A8D9E /* Assets.xcassets */; };
@@ -48,6 +50,11 @@
 		6D35D87E213B37A7004D51B1 /* MultiColorBall.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MultiColorBall.h; sourceTree = "<group>"; };
 		6D35D87F213B37A7004D51B1 /* MultiColorBall.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MultiColorBall.m; sourceTree = "<group>"; };
 		6D3DA03E21DFF48C0024E788 /* ShortestPathAlgorithmTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ShortestPathAlgorithmTests.m; sourceTree = "<group>"; };
+		6D3DA04421E0EF900024E788 /* GridGameView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GridGameView.h; sourceTree = "<group>"; };
+		6D3DA04521E0EF900024E788 /* GridGameView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GridGameView.m; sourceTree = "<group>"; };
+		6D3DA04721E0F0E50024E788 /* AppSettings.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppSettings.h; sourceTree = "<group>"; };
+		6D3DA04821E0F0E50024E788 /* AppSettings.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppSettings.m; sourceTree = "<group>"; };
+		6D3DA05621E101580024E788 /* Balls-Prefix-Header.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Balls-Prefix-Header.pch"; sourceTree = "<group>"; };
 		6D649ADE21275205000A8D9E /* Balls.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Balls.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		6D649AE121275206000A8D9E /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		6D649AE221275206000A8D9E /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -111,6 +118,8 @@
 			children = (
 				6D22B3F421DFD6F300D50FD2 /* ShortestPathAlgorithm.h */,
 				6D22B3F521DFD6F300D50FD2 /* ShortestPathAlgorithm.m */,
+				6D3DA04421E0EF900024E788 /* GridGameView.h */,
+				6D3DA04521E0EF900024E788 /* GridGameView.m */,
 			);
 			path = "Search shortest path algorithm";
 			sourceTree = "<group>";
@@ -151,6 +160,8 @@
 				6D649AEF2127520B000A8D9E /* Info.plist */,
 				6D649AE121275206000A8D9E /* AppDelegate.h */,
 				6D649AE221275206000A8D9E /* AppDelegate.m */,
+				6D3DA04721E0F0E50024E788 /* AppSettings.h */,
+				6D3DA04821E0F0E50024E788 /* AppSettings.m */,
 				6D649B18212B52E3000A8D9E /* SecondScreen */,
 				6D649AE721275206000A8D9E /* Main.storyboard */,
 			);
@@ -168,6 +179,7 @@
 				6D649B0B21275EC7000A8D9E /* BallRed.png */,
 				6D649B0921275EC7000A8D9E /* BallGreen.png */,
 				6D649B0821275EC7000A8D9E /* BallYellow.png */,
+				6D3DA05621E101580024E788 /* Balls-Prefix-Header.pch */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -258,6 +270,7 @@
 					};
 					6D649ADD21275205000A8D9E = {
 						CreatedOnToolsVersion = 9.4.1;
+						LastSwiftMigration = 1010;
 					};
 				};
 			};
@@ -428,8 +441,10 @@
 				6D649AF12127520B000A8D9E /* main.m in Sources */,
 				6D22B3F621DFD6F300D50FD2 /* ShortestPathAlgorithm.m in Sources */,
 				6D649B162127637D000A8D9E /* BoxBallView.m in Sources */,
+				6D3DA04621E0EF900024E788 /* GridGameView.m in Sources */,
 				6D35D880213B37A7004D51B1 /* MultiColorBall.m in Sources */,
 				6D649AE321275206000A8D9E /* AppDelegate.m in Sources */,
+				6D3DA04921E0F0E50024E788 /* AppSettings.m in Sources */,
 				6D649B0521275798000A8D9E /* MulticoloredBallsViewModel.m in Sources */,
 				6D649B132127635D000A8D9E /* GameView.m in Sources */,
 			);
@@ -551,6 +566,7 @@
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREFIX_HEADER = "Resources/Balls-Prefix-Header.pch";
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
 					"$(inherited)",
@@ -607,6 +623,7 @@
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_PREFIX_HEADER = "Resources/Balls-Prefix-Header.pch";
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
 				GCC_WARN_UNDECLARED_SELECTOR = YES;
@@ -624,7 +641,9 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 0B0C21B48D4A2FFAAA8B75C9 /* Pods-Balls.debug.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = Z945JY3H6X;
 				INFOPLIST_FILE = Balls/Info.plist;
@@ -635,6 +654,9 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = mrSorokinMaxim.Balls;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "Resources/Balls-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 4.2;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
@@ -643,7 +665,9 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 2628BE3A70CCAB55A3A4BCA4 /* Pods-Balls.release.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = Z945JY3H6X;
 				INFOPLIST_FILE = Balls/Info.plist;
@@ -654,6 +678,8 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = mrSorokinMaxim.Balls;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "Resources/Balls-Bridging-Header.h";
+				SWIFT_VERSION = 4.2;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;

@@ -51,8 +51,8 @@
 - (void)animatingRecoveryStandardBallSizeWithCompletionBlock:(void(^)(BOOL finished))complection {
     CGRect standardBound = CGRectMake(CGRectGetMinX(self.bounds),
                                       CGRectGetMinY(self.bounds),
-                                      kWidthRectBall,
-                                      kHeightRectBall);
+                                      [[AppSettings instance] sizeSquareBall],
+                                      [[AppSettings instance] sizeSquareBall]);
     [self.layer removeAllAnimations];
     __weak MultiColorBall *weakSelf = self;
     [UIView animateWithDuration:0.2 delay:0.0 options:UIViewAnimationOptionCurveEaseInOut | UIViewKeyframeAnimationOptionBeginFromCurrentState animations:^{
@@ -66,12 +66,12 @@
     
     CGRect oldFrame = CGRectMake(CGRectGetMaxX(self.frame),
                                  CGRectGetMaxY(self.frame),
-                                 kWidthRectBall,
-                                 kHeightRectBall);
+                                 [[AppSettings instance] sizeSquareBall],
+                                 [[AppSettings instance] sizeSquareBall]);
     CGRect newFrame = CGRectMake(CGRectGetMaxX(self.frame),
                                  CGRectGetMaxY(self.frame),
-                                 kWidthRectBall / 1.5f,
-                                 kHeightRectBall / 1.5f);
+                                 [[AppSettings instance] sizeSquareBall] / 1.5f,
+                                 [[AppSettings instance] sizeSquareBall] / 1.5f);
 
     CGPoint centre = self.center;
 
@@ -80,8 +80,8 @@
 
     CGRect variableRect = CGRectMake(CGRectGetMaxX(self.frame),
                                      CGRectGetMaxY(self.frame),
-                                     MIN(self.sizeAnimationBall.width, kWidthRectBall + 50.f),
-                                     MIN(self.sizeAnimationBall.height, kHeightRectBall + 50.f));
+                                     MIN(self.sizeAnimationBall.width, [[AppSettings instance] sizeSquareBall] + 50.f),
+                                     MIN(self.sizeAnimationBall.height, [[AppSettings instance] sizeSquareBall] + 50.f));
 
     [self.layer removeAllAnimations];
     [UIView animateWithDuration:0.3 delay:0.0 options:UIViewAnimationOptionCurveEaseInOut | UIViewKeyframeAnimationOptionBeginFromCurrentState animations:^{
